@@ -1,0 +1,155 @@
+{
+  "name": "vscode-secure-notes",
+  "displayName": "Secure Notes - 加密笔记",
+  "description": "支持富文本编辑和加密存储的安全笔记插件",
+  "version": "1.0.0",
+  "publisher": "zoominhao",
+  "engines": {
+    "vscode": "^1.80.0"
+  },
+  "categories": [
+    "Other"
+  ],
+  "activationEvents": [
+    "onView:secureNotes"
+  ],
+  "main": "./out/extension.js",
+  "contributes": {
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "id": "secure-notes",
+          "title": "加密笔记",
+          "icon": "resources/notebook.svg"
+        }
+      ]
+    },
+    "views": {
+      "secure-notes": [
+        {
+          "id": "secureNotes",
+          "name": "我的笔记"
+        }
+      ]
+    },
+    "commands": [
+      {
+        "command": "secureNotes.createNote",
+        "title": "创建新笔记",
+        "icon": "$(add)"
+      },
+      {
+        "command": "secureNotes.deleteNote",
+        "title": "删除笔记",
+        "icon": "$(trash)"
+      },
+      {
+        "command": "secureNotes.editNote",
+        "title": "编辑笔记",
+        "icon": "$(edit)"
+      },
+      {
+        "command": "secureNotes.setPassword",
+        "title": "设置加密密码"
+      },
+      {
+        "command": "secureNotes.exportNotes",
+        "title": "导出笔记"
+      },
+      {
+        "command": "secureNotes.changeStoragePath",
+        "title": "更改存储路径"
+      },
+      {
+        "command": "secureNotes.createNoteInFolder",
+        "title": "在此文件夹创建笔记",
+        "icon": "$(add)"
+      },
+      {
+        "command": "secureNotes.logout",
+        "title": "注销当前用户"
+      },
+      {
+        "command": "secureNotes.exportToFiles",
+        "title": "导出为明文文件",
+        "icon": "$(export)"
+      },
+      {
+        "command": "secureNotes.importFromFiles",
+        "title": "从文件导入笔记",
+        "icon": "$(cloud-download)"
+      },
+      {
+        "command": "secureNotes.deleteFolder",
+        "title": "删除文件夹",
+        "icon": "$(trash)"
+      }
+    ],
+    "menus": {
+      "view/title": [
+        {
+          "command": "secureNotes.createNote",
+          "when": "view == secureNotes",
+          "group": "navigation@1"
+        },
+        {
+          "command": "secureNotes.exportToFiles",
+          "when": "view == secureNotes",
+          "group": "navigation@2"
+        },
+        {
+          "command": "secureNotes.importFromFiles",
+          "when": "view == secureNotes",
+          "group": "navigation@3"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "secureNotes.createNoteInFolder",
+          "when": "view == secureNotes && viewItem == folder",
+          "group": "inline@1"
+        },
+        {
+          "command": "secureNotes.deleteFolder",
+          "when": "view == secureNotes && viewItem == folder",
+          "group": "inline@2"
+        },
+        {
+          "command": "secureNotes.deleteNote",
+          "when": "view == secureNotes && viewItem == note",
+          "group": "inline"
+        }
+      ]
+    },
+    "configuration": {
+      "title": "Secure Notes",
+      "properties": {
+        "secureNotes.storagePath": {
+          "type": "string",
+          "default": "",
+          "description": "笔记存储路径"
+        },
+        "secureNotes.autoSave": {
+          "type": "boolean",
+          "default": true,
+          "description": "自动保存"
+        }
+      }
+    }
+  },
+  "scripts": {
+    "vscode:prepublish": "npm run compile",
+    "compile": "tsc -p ./",
+    "watch": "tsc -watch -p ./",
+    "pretest": "npm run compile"
+  },
+  "devDependencies": {
+    "@types/crypto-js": "^4.2.2",
+    "@types/node": "^20.0.0",
+    "@types/vscode": "^1.80.0",
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "crypto-js": "^4.2.0"
+  }
+}
