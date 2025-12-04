@@ -159,24 +159,44 @@
         },
         "secureNotes.sync.provider": {
           "type": "string",
-          "enum": ["none", "webdav", "github", "custom"],
+          "enum": ["none", "webdav", "github"],
+          "enumDescriptions": [
+            "禁用云同步",
+            "使用 WebDAV（Nextcloud、坚果云等）",
+            "使用 GitHub 仓库"
+          ],
           "default": "none",
           "description": "云同步方式"
         },
-        "secureNotes.sync.url": {
+        "secureNotes.sync.github.repo": {
           "type": "string",
-          "default": "",
-          "description": "同步服务器地址"
+          "default": "zoominhao/MyNotes",
+          "description": "GitHub 仓库（格式：用户名/仓库名）"
         },
-        "secureNotes.sync.username": {
+        "secureNotes.sync.github.token": {
           "type": "string",
           "default": "",
-          "description": "同步用户名"
+          "description": "GitHub Token（在 https://github.com/settings/tokens 获取，需要 repo 权限）"
+        },
+        "secureNotes.sync.webdav.url": {
+          "type": "string",
+          "default": "",
+          "description": "WebDAV 服务器地址（例如：https://dav.jianguoyun.com/dav/SecureNotes/）"
+        },
+        "secureNotes.sync.webdav.username": {
+          "type": "string",
+          "default": "",
+          "description": "WebDAV 用户名"
+        },
+        "secureNotes.sync.webdav.password": {
+          "type": "string",
+          "default": "",
+          "description": "WebDAV 密码"
         },
         "secureNotes.sync.autoSync": {
           "type": "boolean",
           "default": false,
-          "description": "自动同步（保存时自动上传）"
+          "description": "自动同步（保存后自动上传）"
         }
       }
     }

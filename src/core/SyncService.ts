@@ -33,15 +33,33 @@ export class SyncService {
     }
 
     /**
-     * 加载同步配置
+     * 加载同步配置（从 settings.json 读取）
      */
     private loadConfig(): SyncConfig {
-        const config = vscode.workspace.getConfiguration('secureNotes');
+        const config = vscode.workspace.getConfiguration('secureNotes.sync');
+        const provider = config.get('provider', SyncProvider.None) as SyncProvider;
+
+        let url = '';
+        let username = '';
+        let token = '';
+
+        // 根据不同提供商加载对应配置
+        if (provider === SyncProvider.GitHub) {
+            const repo = config.get('github.repo', 'zoominhao/MyNotes');
+            url = `https://api.github.com/repos/${repo}`;
+            token = config.get('github.token', '');
+        } else if (provider === SyncProvider.WebDAV) {
+            url = config.get('webdav.url', '');
+            username = config.get('webdav.username', '');
+            // 密码从 secrets 获取（更安全）
+        }
+
         return {
-            provider: config.get('sync.provider', SyncProvider.None),
-            url: config.get('sync.url'),
-            username: config.get('sync.username'),
-            autoSync: config.get('sync.autoSync', false)
+            provider,
+            url,
+            username,
+            token,
+            autoSync: config.get('autoSync', false)
         };
     }
 

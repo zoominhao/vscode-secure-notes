@@ -130,6 +130,7 @@ vsce package --allow-missing-repository
 2. 选择 "GitHub"
 3. 输入仓库：`zoominhao/MyNotes`
 4. 输入 GitHub Token（[获取方法](https://github.com/settings/tokens)）
+   
 5. 点击 🔄 图标 → 选择同步方式
 
 **同步方式：**
