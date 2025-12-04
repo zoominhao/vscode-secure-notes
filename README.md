@@ -118,13 +118,46 @@ vsce package --allow-missing-repository
 - 选择包含 .md 文件的目录
 - 自动加密并导入（同名覆盖）
 
-### 6. 快捷键
+### 6. 云同步（新功能）
+
+**支持的云服务：**
+- ✅ WebDAV（Nextcloud、ownCloud、坚果云等）
+- ✅ GitHub 仓库
+- ⏳ 自定义服务器（框架已就绪）
+
+**配置 GitHub 同步（推荐示例）：**
+1. `Cmd+Shift+P` → "配置云同步"
+2. 选择 "GitHub"
+3. 输入仓库：`zoominhao/MyNotes`
+4. 输入 GitHub Token（[获取方法](https://github.com/settings/tokens)）
+5. 点击 🔄 图标 → 选择同步方式
+
+**同步方式：**
+- **⬆️ 上传到云端** - 将本地笔记上传覆盖云端
+- **⬇️ 从云端下载** - 从云端下载覆盖本地
+- **🔄 智能合并** - 自动合并本地和云端（按时间戳，保留最新版本）
+
+**示例配置：**
+```
+GitHub 仓库: zoominhao/MyNotes
+Token: ghp_xxxxxxxxxxxx（在 GitHub Settings → Developer settings 获取）
+权限要求: repo
+```
+
+**安全说明：**
+- ✅ 上传的是加密文件（`notes_用户名.encrypted`）
+- ✅ 云端无法解密内容
+- ✅ Token 安全存储在 VSCode Secrets
+
+### 7. 快捷键
 
 | 快捷键 | 功能 |
 |--------|------|
 | `Cmd+S` | 保存笔记 |
 | `Cmd+Shift+P` → "设置加密密码" | 登录/切换用户 |
 | `Cmd+Shift+P` → "注销当前用户" | 注销 |
+| `Cmd+Shift+P` → "配置云同步" | 配置云同步 |
+| `Cmd+Shift+P` → "立即同步" | 同步笔记 |
 
 ## 🔧 技术栈
 
