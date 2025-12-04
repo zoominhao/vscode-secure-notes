@@ -51,7 +51,15 @@ export class SyncService {
         } else if (provider === SyncProvider.WebDAV) {
             url = config.get('webdav.url', '');
             username = config.get('webdav.username', '');
-            // 密码从 secrets 获取（更安全）
+            // WebDAV 密码从配置读取（简化配置流程）
+            const password = config.get('webdav.password', '');
+            return {
+                provider,
+                url,
+                username,
+                password,
+                autoSync: config.get('autoSync', false)
+            };
         }
 
         return {
@@ -212,8 +220,19 @@ export class SyncService {
      */
     async uploadToCloud(localFilePath: string, currentUser: string): Promise<boolean> {
         if (this.config.provider === SyncProvider.None) {
+            vscode.window.showWarningMessage('请先在设置中配置云同步（secureNotes.sync.provider）');
             return false;
         }
+
+        // 重新加载配置（确保获取最新设置）
+        this.config = this.loadConfig();
+
+        console.log('同步配置:', {
+            provider: this.config.provider,
+            url: this.config.url,
+            hasToken: !!this.config.token,
+            tokenLength: this.config.token?.length || 0
+        });
 
         if (this.syncInProgress) {
             vscode.window.showWarningMessage('同步正在进行中...');
@@ -238,6 +257,7 @@ export class SyncService {
             }
         } catch (error) {
             vscode.window.showErrorMessage(`上传失败: ${error}`);
+            console.error('上传错误详情:', error);
             return false;
         } finally {
             this.syncInProgress = false;
@@ -297,8 +317,13 @@ export class SyncService {
             throw new Error('WebDAV 配置不完整');
         }
 
-        const url = `${this.config.url}/${fileName}`;
+        // 处理 URL 末尾斜杠，避免双斜杠
+        const baseUrl = this.config.url.endsWith('/') ? this.config.url : this.config.url + '/';
+        const url = baseUrl + fileName;
         const auth = Buffer.from(`${this.config.username}:${this.config.password}`).toString('base64');
+
+        console.log('WebDAV 上传 URL:', url);
+        console.log('WebDAV 用户名:', this.config.username);
 
         const response = await fetch(url, {
             method: 'PUT',
@@ -325,8 +350,12 @@ export class SyncService {
             throw new Error('WebDAV 配置不完整');
         }
 
-        const url = `${this.config.url}/${fileName}`;
+        // 处理 URL 末尾斜杠
+        const baseUrl = this.config.url.endsWith('/') ? this.config.url : this.config.url + '/';
+        const url = baseUrl + fileName;
         const auth = Buffer.from(`${this.config.username}:${this.config.password}`).toString('base64');
+
+        console.log('WebDAV 下载 URL:', url);
 
         const response = await fetch(url, {
             method: 'GET',
@@ -349,13 +378,18 @@ export class SyncService {
      * GitHub 上传（使用 Contents API）
      */
     private async uploadToGitHub(fileName: string, content: string): Promise<boolean> {
-        if (!this.config.url || !this.config.token) {
-            throw new Error('GitHub 配置不完整');
+        if (!this.config.url) {
+            throw new Error('GitHub 配置不完整：未设置仓库');
         }
 
-        const token = await this.context.secrets.get('sync.token');
+        // 优先从配置读取 Token，如果没有则从 secrets 读取
+        let token = this.config.token;
         if (!token) {
-            throw new Error('GitHub Token 未找到');
+            token = await this.context.secrets.get('sync.token') || '';
+        }
+
+        if (!token) {
+            throw new Error('GitHub Token 未配置，请在设置中配置 secureNotes.sync.github.token');
         }
 
         const apiUrl = `${this.config.url}/contents/${fileName}`;
@@ -387,22 +421,30 @@ export class SyncService {
             body.sha = sha; // 更新现有文件
         }
 
+        console.log('GitHub API URL:', apiUrl);
+        console.log('Token length:', token.length);
+        console.log('Body:', JSON.stringify(body).substring(0, 200));
+
         const response = await fetch(apiUrl, {
             method: 'PUT',
             headers: {
                 'Authorization': `token ${token}`,
                 'Accept': 'application/vnd.github.v3+json',
-                'Content-Type': 'application/json'
+                'Content-Type': 'application/json',
+                'User-Agent': 'VSCode-Secure-Notes'
             },
             body: JSON.stringify(body)
         });
+
+        console.log('Response status:', response.status);
 
         if (response.ok) {
             vscode.window.showInformationMessage('✅ 已上传到 GitHub');
             return true;
         } else {
             const error = await response.text();
-            throw new Error(`GitHub 上传失败: ${error}`);
+            console.error('GitHub 上传错误:', error);
+            throw new Error(`GitHub 上传失败 (${response.status}): ${error}`);
         }
     }
 
@@ -410,13 +452,18 @@ export class SyncService {
      * GitHub 下载
      */
     private async downloadFromGitHub(fileName: string): Promise<string | null> {
-        if (!this.config.url || !this.config.token) {
-            throw new Error('GitHub 配置不完整');
+        if (!this.config.url) {
+            throw new Error('GitHub 配置不完整：未设置仓库');
         }
 
-        const token = await this.context.secrets.get('sync.token');
+        // 优先从配置读取 Token
+        let token = this.config.token;
         if (!token) {
-            throw new Error('GitHub Token 未找到');
+            token = await this.context.secrets.get('sync.token') || '';
+        }
+
+        if (!token) {
+            throw new Error('GitHub Token 未配置，请在设置中配置 secureNotes.sync.github.token');
         }
 
         const apiUrl = `${this.config.url}/contents/${fileName}`;

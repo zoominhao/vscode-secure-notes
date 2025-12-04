@@ -1,15 +1,28 @@
 {
   "name": "vscode-secure-notes",
   "displayName": "Secure Notes - 加密笔记",
-  "description": "支持富文本编辑和加密存储的安全笔记插件",
-  "version": "1.0.0",
+  "description": "支持富文本编辑、云同步和完全加密存储的安全笔记插件",
+  "version": "2.0.0",
   "publisher": "zoominhao",
+  "icon": "resources/icon.png",
   "engines": {
     "vscode": "^1.80.0"
   },
   "categories": [
     "Other"
   ],
+  "keywords": [
+    "notes",
+    "encrypted",
+    "secure",
+    "云同步",
+    "加密笔记",
+    "富文本"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zoominhao/vscode-secure-notes.git"
+  },
   "activationEvents": [
     "onView:secureNotes"
   ],
@@ -166,17 +179,20 @@
             "使用 GitHub 仓库"
           ],
           "default": "none",
-          "description": "云同步方式"
+          "description": "云同步方式",
+          "markdownDescription": "选择云同步方式\n\n**推荐:** 直接编辑配置文件获得更好体验\n\n$(edit) [Edit in settings.json](command:workbench.action.openSettingsJson)"
         },
         "secureNotes.sync.github.repo": {
           "type": "string",
           "default": "zoominhao/MyNotes",
-          "description": "GitHub 仓库（格式：用户名/仓库名）"
+          "description": "GitHub 仓库（格式：用户名/仓库名）",
+          "markdownDescription": "GitHub 仓库名称\n\n**示例配置:** [查看完整配置](command:workbench.action.openSettingsJson)"
         },
         "secureNotes.sync.github.token": {
           "type": "string",
           "default": "",
-          "description": "GitHub Token（在 https://github.com/settings/tokens 获取，需要 repo 权限）"
+          "description": "GitHub Token（需要 repo 权限）",
+          "markdownDescription": "GitHub Personal Access Token\n\n**获取:** [GitHub Settings → Tokens](https://github.com/settings/tokens)\n\n**权限:** repo (完整)\n\n$(edit) [Edit in settings.json](command:workbench.action.openSettingsJson)"
         },
         "secureNotes.sync.webdav.url": {
           "type": "string",

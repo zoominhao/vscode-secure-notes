@@ -1,4 +1,21 @@
-<svg width="24" height="24" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <path d="M19 3H5C3.89543 3 3 3.89543 3 5V19C3 20.1046 3.89543 21 5 21H19C20.1046 21 21 20.1046 21 19V5C21 3.89543 20.1046 3 19 3Z" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M7 7H17M7 12H17M7 17H13" stroke="currentColor" stroke-width="2" stroke-linecap="round"/>
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- 笔记本 -->
+  <rect x="6" y="4" width="20" height="24" rx="2" fill="currentColor" opacity="0.15"/>
+  <rect x="6" y="4" width="20" height="24" rx="2" stroke="currentColor" stroke-width="2"/>
+
+  <!-- 笔记线条 -->
+  <line x1="10" y1="10" x2="22" y2="10" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+  <line x1="10" y1="14" x2="22" y2="14" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+  <line x1="10" y1="18" x2="18" y2="18" stroke="currentColor" stroke-width="1.5" opacity="0.4"/>
+
+  <!-- 锁（加密标志）- 右下角 -->
+  <g transform="translate(18, 20)">
+    <!-- 锁身 -->
+    <rect x="0" y="3" width="8" height="7" rx="1" fill="currentColor" stroke="currentColor" stroke-width="1.5"/>
+    <!-- 锁扣 -->
+    <path d="M 2 3 V 1.5 C 2 0.67 2.67 0 3.5 0 H 4.5 C 5.33 0 6 0.67 6 1.5 V 3"
+          stroke="currentColor" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+    <!-- 锁孔 -->
+    <circle cx="4" cy="6.5" r="1.2" fill="currentColor" opacity="0.3"/>
+  </g>
 </svg>
