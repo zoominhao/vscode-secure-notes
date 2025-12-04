@@ -9,11 +9,13 @@
 
 import * as vscode from 'vscode';
 import { NotesManager } from './core/NotesManager';
+import { SyncService } from './core/SyncService';
 import { NotesTreeProvider } from './ui/NotesTreeProvider';
 import { registerNoteCommands } from './commands/NoteCommands';
 import { registerFolderCommands } from './commands/FolderCommands';
 import { registerUserCommands } from './commands/UserCommands';
 import { registerImportExportCommands } from './commands/ImportExportCommands';
+import { registerSyncCommands } from './commands/SyncCommands';
 
 /**
  * 插件激活函数
@@ -24,6 +26,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 初始化核心服务
     const notesManager = new NotesManager(context);
+    const syncService = new SyncService(context);
     const treeProvider = new NotesTreeProvider(notesManager);
 
     // 注册树视图
@@ -37,6 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
     registerFolderCommands(context, notesManager, treeProvider);
     registerUserCommands(context, notesManager, treeProvider);
     registerImportExportCommands(context, notesManager, treeProvider);
+    registerSyncCommands(context, notesManager, treeProvider, syncService);
 }
 
 /**

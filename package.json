@@ -72,17 +72,35 @@
       {
         "command": "secureNotes.exportToFiles",
         "title": "导出为明文文件",
-        "icon": "$(export)"
+        "icon": "$(git-stash-pop)"
       },
       {
         "command": "secureNotes.importFromFiles",
         "title": "从文件导入笔记",
-        "icon": "$(cloud-download)"
+        "icon": "$(git-stash)"
       },
       {
         "command": "secureNotes.deleteFolder",
         "title": "删除文件夹",
         "icon": "$(trash)"
+      },
+      {
+        "command": "secureNotes.configureSyncCommands",
+        "title": "配置云同步"
+      },
+      {
+        "command": "secureNotes.syncNow",
+        "title": "立即同步",
+        "icon": "$(sync)"
+      },
+      {
+        "command": "secureNotes.uploadToCloud",
+        "title": "上传到云端",
+        "icon": "$(cloud-upload)"
+      },
+      {
+        "command": "secureNotes.downloadFromCloud",
+        "title": "从云端下载"
       }
     ],
     "menus": {
@@ -101,6 +119,11 @@
           "command": "secureNotes.importFromFiles",
           "when": "view == secureNotes",
           "group": "navigation@3"
+        },
+        {
+          "command": "secureNotes.syncNow",
+          "when": "view == secureNotes",
+          "group": "navigation@4"
         }
       ],
       "view/item/context": [
@@ -133,6 +156,27 @@
           "type": "boolean",
           "default": true,
           "description": "自动保存"
+        },
+        "secureNotes.sync.provider": {
+          "type": "string",
+          "enum": ["none", "webdav", "github", "custom"],
+          "default": "none",
+          "description": "云同步方式"
+        },
+        "secureNotes.sync.url": {
+          "type": "string",
+          "default": "",
+          "description": "同步服务器地址"
+        },
+        "secureNotes.sync.username": {
+          "type": "string",
+          "default": "",
+          "description": "同步用户名"
+        },
+        "secureNotes.sync.autoSync": {
+          "type": "boolean",
+          "default": false,
+          "description": "自动同步（保存时自动上传）"
         }
       }
     }
